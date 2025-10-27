@@ -7,15 +7,15 @@ function NavbarPrincipal() {
     return (
         <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary fixed-top">
             <Container>
-                <Navbar.Brand href="#home"><img src='assets/images/imagotipo.png' style={{width: '60px'}}></img> SolarTrueno</Navbar.Brand>
+                <Navbar.Brand href="#hero"><img src='assets/images/imagotipo.png' style={{width: '60px'}}></img> SolarTrueno</Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
                     </Nav>
                     <Nav>
-                        <Nav.Link href="#">Inicio</Nav.Link>
-                        <Nav.Link href="#">Servicios</Nav.Link>
-                        <Nav.Link href="#">Soluciones</Nav.Link>
+                        <Nav.Link href="#hero">Inicio</Nav.Link>
+                        <Nav.Link href="#servicios">Servicios</Nav.Link>
+                        <Nav.Link href="#soluciones">Soluciones</Nav.Link>
                         <Nav.Link href="#demo-calculadora">DEMO</Nav.Link>
                         <Nav.Link href="#">Planes</Nav.Link>
                         <Nav.Link href="#">Testimonios</Nav.Link>
