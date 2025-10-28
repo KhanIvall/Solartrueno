@@ -7,6 +7,7 @@ import Badge from 'react-bootstrap/Badge';
 
 function Calculadora() {
 
+    // variables de estado
     const [potenciaPanel, setPotenciaPanel] = useState(0);
     const [cantidadPanel, setCantidadPanel] = useState(0);
     const [inversorPrecio, setInversorPrecio] = useState(0);
@@ -15,6 +16,16 @@ function Calculadora() {
     const [estructurasPrecio, setEstructurasPrecio] = useState(0);
     const [instalacionBase, setInstalacionBase] = useState(0);
     const [pesoKg, setPesoKg] = useState(0);
+    const [pieValor, setPieValor] = useState(0);
+
+    const [techo, setTecho] = useState('');
+    const [region, setRegion] = useState('');
+    const [complejidad, setComplejidad] = useState('');
+    const [subsidio, setSubsidio] = useState('');
+    const [envio, setEnvio] = useState('');
+    const [garantia, setGarantia] = useState('');
+    const [planPago, setPlanPago] = useState('');
+    const [tipoPie, setTipoPie] = useState('');
 
     /*
         //contador:
@@ -194,60 +205,89 @@ function Calculadora() {
                             {/* Tipo techo y región */}
                             <div className='row mt-4'>
                                 <div className='col-lg-6'>
-                                    <label className='form-label' htmlFor='instalacionBase'>Tipo de techo</label>
-                                    <select className='form-select' id='instalacionBase' name='instalacionBase' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}>
-                                        <option>Seleccione prevision</option>
-                                        <option value={1}>Isapre</option>
-                                        <option value={2}>Fonasa</option>
+                                    <label className='form-label' htmlFor='techo'>Tipo de techo</label>
+                                    <select className='form-select' id='techo' name='techo' value={techo} onChange={(e) => setTecho(e.target.value)}>
+                                        <option>Teja/Asfalto</option>
+                                        <option value={1}>Zinc/Planchas</option>
+                                        <option value={2}>Hormigón</option>
                                     </select>
                                 </div>
                                 <div className='col-lg-6'>
-                                    <label className='form-label' htmlFor='instalacionBase'>Instalación base</label>
-                                    <input id='instalacionBase' name='instalacionBase' placeholder='350000' type='number' className='form-control' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}></input>
+                                    <label className='form-label' htmlFor='region'>Región</label>
+                                    <select className='form-select' id='region' name='region' value={region} onChange={(e) => setRegion(e.target.value)}>
+                                        <option>RM ($5.000)</option>
+                                        <option value={1}>Norte ($9.000)</option>
+                                        <option value={2}>Sur ($10.000)</option>
+                                        <option value={3}>Austral ($15.000)</option>
+                                    </select>
                                 </div>
                             </div>
 
                             {/* Complejidad y subsidio */}
                             <div className='row mt-4'>
                                 <div className='col-lg-6'>
-                                    <label className='form-label' htmlFor='instalacionBase'>Instalación base</label>
-                                    <input id='instalacionBase' name='instalacionBase' placeholder='350000' type='number' className='form-control' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}></input>
+                                    <label className='form-label' htmlFor='complejidad'>Complejidad instalación</label>
+                                    <select className='form-select' id='complejidad' name='complejidad' value={complejidad} onChange={(e) => setComplejidad(e.target.value)}>
+                                        <option>Baja (0%)</option>
+                                        <option value={1}>Media (8%)</option>
+                                        <option value={2}>Alta (15%)</option>
+                                    </select>
                                 </div>
                                 <div className='col-lg-6'>
-                                    <label className='form-label' htmlFor='instalacionBase'>Instalación base</label>
-                                    <input id='instalacionBase' name='instalacionBase' placeholder='350000' type='number' className='form-control' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}></input>
+                                    <label className='form-label' htmlFor='subsidio'>Subsidio</label>
+                                    <select className='form-select' id='subsidio' name='subsidio' value={subsidio} onChange={(e) => setSubsidio(e.target.value)}>
+                                        <option>Sin subsidio (0%)</option>
+                                        <option value={1}>Residencial (8%)</option>
+                                        <option value={2}>Pyme (5%)</option>
+                                    </select>
                                 </div>
                             </div>
 
                             {/* Envío y garantía */}
                             <div className='row mt-4'>
                                 <div className='col-lg-6'>
-                                    <label className='form-label' htmlFor='instalacionBase'>Instalación base</label>
-                                    <input id='instalacionBase' name='instalacionBase' placeholder='350000' type='number' className='form-control' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}></input>
+                                    <label className='form-label' htmlFor='envio'>Método de envío</label>
+                                    <select className='form-select' id='envio' name='envio' value={envio} onChange={(e) => setEnvio(e.target.value)}>
+                                        <option>Estándar (x1.00)</option>
+                                        <option value={1}>Exprés (x1.20)</option>
+                                    </select>
                                 </div>
                                 <div className='col-lg-6'>
-                                    <label className='form-label' htmlFor='instalacionBase'>Instalación base</label>
-                                    <input id='instalacionBase' name='instalacionBase' placeholder='350000' type='number' className='form-control' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}></input>
+                                    <label className='form-label' htmlFor='garantia'>Garantía</label>
+                                    <select className='form-select' id='garantia' name='garantia' value={garantia} onChange={(e) => setGarantia(e.target.value)}>
+                                        <option>12 meses (+2%)</option>
+                                        <option value={1}>24 meses (+4%)</option>
+                                        <option value={2}>36 meses (+6%)</option>
+                                    </select>
                                 </div>
                             </div>
 
                             {/* Plan y pie */}
                             <div className='row mt-4'>
                                 <div className='col-lg-6'>
-                                    <label className='form-label' htmlFor='instalacionBase'>Instalación base</label>
-                                    <input id='instalacionBase' name='instalacionBase' placeholder='350000' type='number' className='form-control' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}></input>
+                                    <label className='form-label' htmlFor='planPago'>Plan de pago</label>
+                                    <select className='form-select' id='planPago' name='planPago' value={planPago} onChange={(e) => setPlanPago(e.target.value)}>
+                                        <option>Contado (0%)</option>
+                                        <option value={1}>6 cuotas (1.2%)</option>
+                                        <option value={2}>12 cuotas (1.1%)</option>
+                                        <option value={3}>24 cuotas (1.0%)</option>
+                                    </select>
                                 </div>
                                 <div className='col-lg-6'>
-                                    <label className='form-label' htmlFor='instalacionBase'>Instalación base</label>
-                                    <input id='instalacionBase' name='instalacionBase' placeholder='350000' type='number' className='form-control' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}></input>
+                                    <label className='form-label' htmlFor='tipoPie'>Tipo de pie</label>
+                                    <select className='form-select' id='tipoPie' name='tipoPie' value={tipoPie} onChange={(e) => setTipoPie(e.target.value)}>
+                                        <option>Porcentaje</option>
+                                        <option value={1}>Monto fijo</option>
+                                    </select>
                                 </div>
                             </div>
 
                             {/* Valor de pie */}
                             <div className='row mt-4'>
                                 <div className='col-lg-6'>
-                                    <label className='form-label' htmlFor='instalacionBase'>Instalación base</label>
-                                    <input id='instalacionBase' name='instalacionBase' placeholder='350000' type='number' className='form-control' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}></input>
+                                    <label className='form-label' htmlFor='pieValor'>Valor de pie</label>
+                                    <input id='pieValor' name='pieValor' placeholder='10' type='number' className='form-control' value={pieValor} onChange={(e) => setPieValor(e.target.value)}></input>
+                                    <label className='text-muted mt-2'>Si es porcentaje, 10 = 10%</label>
                                 </div>
                             </div>
 
