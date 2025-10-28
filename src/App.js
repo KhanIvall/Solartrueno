@@ -9,12 +9,14 @@ import Testimonies from './components/Testimonios';
 import FAQs from './components/FAQ';
 import Contact from './components/Contacto';
 import Foot from './components/Footer';
+import CarruselPrincipal from './components/Carrusel';
 
 function App() {
   return (
     <div className="">
       <Navbar/>
       <div className='container mt-5'>
+        <CarruselPrincipal/>
         <Hero/>
         <Services/>
         <Solutions/>

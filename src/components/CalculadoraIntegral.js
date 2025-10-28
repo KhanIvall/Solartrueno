@@ -6,6 +6,131 @@ import Button from 'react-bootstrap/Button';
 import Badge from 'react-bootstrap/Badge';
 
 function Calculadora() {
+
+    const [potenciaPanel, setPotenciaPanel] = useState(0);
+    const [cantidadPanel, setCantidadPanel] = useState(0);
+    const [inversorPrecio, setInversorPrecio] = useState(0);
+    const [bateriaPrecio, setBateriaPrecio] = useState(0);
+    const [batCantidad, setBatCantidad] = useState(0);
+    const [estructurasPrecio, setEstructurasPrecio] = useState(0);
+    const [instalacionBase, setInstalacionBase] = useState(0);
+    const [pesoKg, setPesoKg] = useState(0);
+
+    /*
+        //contador:
+        const n = (v) => {
+            const x = Number(v);
+            return Number.isFinite(x) && x > 0 ? x : 0; // número válido y evita negativos/NaN (si no es válido, devuelve 0)
+        };
+        //LocaleString para CLP
+        const clp = (v) => `$${Math.round(v).toLocaleString('es-CL')}`;
+    
+        // ====== Formulario:no permitir negativos; placeholders claros ======
+        const [potenciaPanel, setPotenciaPanel] = useState(0); // potencia por panel (W)
+        const [cantidadPanel, setCantidadPanel] = useState(0); // cantidad paneles
+        const [panelPrecio, setPanelPrecio] = useState(0); // precio por panel 
+        const [inversorPrecio, setInversorPrecio] = useState(0);
+        const [bateriaPrecio, setBateriaPrecio] = useState(0); // precio por batería
+        const [batCantidad, setBatCantidad] = useState(0); // cantidad baterías
+        const [estructurasPrecio, setEstructurasPrecio] = useState(0); // estructuras y cableado
+        const [instalacionBase, setInstalacionBase] = useState(0);
+        const [pesoKg, setPesoKg] = useState(0);
+    
+        //Selects obligatorios (con valores que afectan el cálculo)
+        const [techo, setTecho] = useState(''); // teja/zinc/hormigon
+        const [region, setRegion] = useState(''); // rm/norte/sur/austral
+        const [complejidad, setComplejidad] = useState(''); // baja/media/alta
+        const [subsidio, setSubsidio] = useState(''); // sin/residencial/pyme
+        const [envio, setEnvio] = useState(''); // estandar//expres
+        const [garantia, setGarantia] = useState(''); // 12/24/36
+        const [planPago, setPlanPago] = useState(''); // contado/6/12/24
+    
+        //Constantes y porcentajes:
+    
+        const RECARGO_TECHO = { teja: 0.05, zinc: 0.02, hormigon: 0.07 };
+        const ENVIO_BASE = { rm: 5000, norte: 9000, sur: 10000, austral: 15000 };
+        const COMP = { baja: 0, media: 0.08, alta: 0.15 };
+        const SUB = { sin: 0, residencial: -0.08, pyme: -0.05 }; // negativo = descuento
+        const ENVIO_MULT = { estandar: 1, expres: 1.2 };
+        const GAR = { '12': 0.02, '24': 0.04, '36': 0.06 };
+        const PLAN = {
+            contado: { tasa: 0, cuotas: 1 },
+            '6': { tasa: 0.012, cuotas: 6 },
+            '12': { tasa: 0.011, cuotas: 12 },
+            '24': { tasa: 0.010, cuotas: 24 }
+        };
+        const IVA = 0.19;
+        const COSTO_KG = 700;
+    
+    
+        //Resultados
+    
+        const potenciaKW = (n(potenciaPanel) * n(cantidadPanel)) / 1000; // referencia
+    
+    
+        // Paneles opcional: si panelPrecio = 0, no suma (solo se usa potencia como referencia)
+        const costoPaneles = n(panelPrecio) > 0 ? n(panelPrecio) * n(cantidadPanel) : 0;
+        const costoBaterias = n(bateriaPrecio) * n(batCantidad);
+        const subtotalEquipos = costoPaneles + n(inversorPrecio) + costoBaterias + n(estructurasPrecio);
+    
+    
+        // Recargo por tipo de techo (sobre subtotal de equipos)
+        const recargoTecho = subtotalEquipos * (RECARGO_TECHO[techo] || 0);
+        const equiposConRecargo = subtotalEquipos + recargoTecho;
+    
+    
+        // Subsidio (porcentaje negativo) sobre equipos con recargo
+        const subsidioMonto = equiposConRecargo * (SUB[subsidio] || 0);
+    
+    
+        // Instalación final = base + % por complejidad
+        const instalacionFinal = n(instalacionBase) * (1 + (COMP[complejidad] || 0));
+    
+    
+        // IVA sobre (equipos con recargo - subsidio + instalación)
+        const baseIVA = Math.max(0, equiposConRecargo - subsidioMonto + instalacionFinal);
+        const ivaMonto = baseIVA * IVA;
+    
+    
+        // Envío = base región + peso*700, multiplicado por método
+        const envioMonto = ((ENVIO_BASE[region] || 0) + n(pesoKg) * COSTO_KG) * (ENVIO_MULT[envio] || 1);
+    
+    
+        // Garantía = % sobre equipos con recargo (antes de subsidio)
+        const garantiaMonto = equiposConRecargo * (GAR[garantia] || 0);
+    
+    
+        // Total antes de financiar
+        const totalAntesFinanciar = Math.max(0, equiposConRecargo - subsidioMonto + instalacionFinal + ivaMonto + envioMonto + garantiaMonto);
+    
+    
+        // Financiamiento (interés simple)
+        const plan = PLAN[planPago] || PLAN['contado'];
+        let pie = 0;
+        if (tipoPie === 'porcentaje') pie = totalAntesFinanciar * (n(pieValor) / 100);
+        else pie = n(pieValor);
+        pie = Math.min(Math.max(0, pie), totalAntesFinanciar); // limitar para no exceder
+    
+    
+        const montoFinanciar = totalAntesFinanciar - pie;
+        const interesTotal = montoFinanciar * plan.tasa * plan.cuotas;
+        const cuota = plan.cuotas > 1 ? (montoFinanciar + interesTotal) / plan.cuotas : 0;
+        const totalFinal = pie + montoFinanciar + interesTotal; // = totalAntes + interes
+    
+    
+        // Advertencia simple
+        const advertencia = potenciaKW > 7 && n(batCantidad) === 0 ? 'Recomendado considerar almacenamiento para estabilidad del sistema' : '';
+    
+        // ====== Acciones ======
+        const limpiar = () => {
+            setPotenciaPanel(0); setCantidadPanel(0); setPanelPrecio(0);
+            setInversorPrecio(0); setBateriaPrecio(0); setBatCantidad(0);
+            setEstructurasPrecio(0); setInstalacionBase(0); setPesoKg(0);
+            setTecho(''); setRegion(''); setComplejidad(''); setSubsidio(''); setEnvio(''); setGarantia(''); setPlanPago('');
+            setTipoPie('porcentaje'); setPieValor(0);
+        };
+    
+    */
     return (
         <div id='demo-calculadora'>
             <div className='row mt-5'>
@@ -21,61 +146,116 @@ function Calculadora() {
                             {/* Potencia y cantidad */}
                             <div className='row mt-4'>
                                 <div className='col-lg-6'>
-                                    
+                                    <label className='form-label' htmlFor='potenciaPanel'>Potencia del panel (W)</label>
+                                    <input id='potenciaPanel' name='potenciaPanel' placeholder='450' type='number' className='form-control' value={potenciaPanel} onChange={(e) => setPotenciaPanel(e.target.value)}></input>
                                 </div>
-                                <div className='col-lg-6'></div>
+                                <div className='col-lg-6'>
+                                    <label className='form-label' htmlFor='cantidadPanel'>Cantidad de paneles</label>
+                                    <input id='cantidadPanel' name='cantidadPanel' placeholder='8' type='number' className='form-control' value={cantidadPanel} onChange={(e) => setCantidadPanel(e.target.value)}></input>
+                                </div>
                             </div>
 
                             {/* Inversor y batería */}
                             <div className='row mt-4'>
-                                <div className='col-lg-6'></div>
-                                <div className='col-lg-6'></div>
+                                <div className='col-lg-6'>
+                                    <label className='form-label' htmlFor='inversorPrecio'>Inversor (precio)</label>
+                                    <input id='inversorPrecio' name='inversorPrecio' placeholder='650000' type='number' className='form-control' value={inversorPrecio} onChange={(e) => setInversorPrecio(e.target.value)}></input>
+                                </div>
+                                <div className='col-lg-6'>
+                                    <label className='form-label' htmlFor='bateriaPrecio'>Batería (precio unidad)</label>
+                                    <input id='bateriaPrecio' name='bateriaPrecio' placeholder='320000' type='number' className='form-control' value={bateriaPrecio} onChange={(e) => setBateriaPrecio(e.target.value)}></input>
+                                </div>
                             </div>
 
                             {/* Cantidad y estructura */}
                             <div className='row mt-4'>
-                                <div className='col-lg-6'></div>
-                                <div className='col-lg-6'></div>
+                                <div className='col-lg-6'>
+                                    <label className='form-label' htmlFor='batCantidad'>Cantidad baterías</label>
+                                    <input id='batCantidad' name='batCantidad' placeholder='1' type='number' className='form-control' value={batCantidad} onChange={(e) => setBatCantidad(e.target.value)}></input>
+                                </div>
+                                <div className='col-lg-6'>
+                                    <label className='form-label' htmlFor='estructurasPrecio'>Estruct./cableado</label>
+                                    <input id='estructurasPrecio' name='estructurasPrecio' placeholder='180000' type='number' className='form-control' value={estructurasPrecio} onChange={(e) => setEstructurasPrecio(e.target.value)}></input>
+                                </div>
                             </div>
 
                             {/* Instalación y peso */}
                             <div className='row mt-4'>
-                                <div className='col-lg-6'></div>
-                                <div className='col-lg-6'></div>
+                                <div className='col-lg-6'>
+                                    <label className='form-label' htmlFor='instalacionBase'>Instalación base</label>
+                                    <input id='instalacionBase' name='instalacionBase' placeholder='350000' type='number' className='form-control' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}></input>
+                                </div>
+                                <div className='col-lg-6'>
+                                    <label className='form-label' htmlFor='pesoKg'>Peso envío (kg)</label>
+                                    <input id='pesoKg' name='pesoKg' placeholder='90' type='number' className='form-control' value={pesoKg} onChange={(e) => setPesoKg(e.target.value)}></input>
+                                </div>
                             </div>
 
                             {/* Tipo techo y región */}
                             <div className='row mt-4'>
-                                <div className='col-lg-6'></div>
-                                <div className='col-lg-6'></div>
+                                <div className='col-lg-6'>
+                                    <label className='form-label' htmlFor='instalacionBase'>Tipo de techo</label>
+                                    <select className='form-select' id='instalacionBase' name='instalacionBase' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}>
+                                        <option>Seleccione prevision</option>
+                                        <option value={1}>Isapre</option>
+                                        <option value={2}>Fonasa</option>
+                                    </select>
+                                </div>
+                                <div className='col-lg-6'>
+                                    <label className='form-label' htmlFor='instalacionBase'>Instalación base</label>
+                                    <input id='instalacionBase' name='instalacionBase' placeholder='350000' type='number' className='form-control' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}></input>
+                                </div>
                             </div>
 
                             {/* Complejidad y subsidio */}
                             <div className='row mt-4'>
-                                <div className='col-lg-6'></div>
-                                <div className='col-lg-6'></div>
+                                <div className='col-lg-6'>
+                                    <label className='form-label' htmlFor='instalacionBase'>Instalación base</label>
+                                    <input id='instalacionBase' name='instalacionBase' placeholder='350000' type='number' className='form-control' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}></input>
+                                </div>
+                                <div className='col-lg-6'>
+                                    <label className='form-label' htmlFor='instalacionBase'>Instalación base</label>
+                                    <input id='instalacionBase' name='instalacionBase' placeholder='350000' type='number' className='form-control' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}></input>
+                                </div>
                             </div>
 
                             {/* Envío y garantía */}
                             <div className='row mt-4'>
-                                <div className='col-lg-6'></div>
-                                <div className='col-lg-6'></div>
+                                <div className='col-lg-6'>
+                                    <label className='form-label' htmlFor='instalacionBase'>Instalación base</label>
+                                    <input id='instalacionBase' name='instalacionBase' placeholder='350000' type='number' className='form-control' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}></input>
+                                </div>
+                                <div className='col-lg-6'>
+                                    <label className='form-label' htmlFor='instalacionBase'>Instalación base</label>
+                                    <input id='instalacionBase' name='instalacionBase' placeholder='350000' type='number' className='form-control' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}></input>
+                                </div>
                             </div>
 
                             {/* Plan y pie */}
                             <div className='row mt-4'>
-                                <div className='col-lg-6'></div>
-                                <div className='col-lg-6'></div>
+                                <div className='col-lg-6'>
+                                    <label className='form-label' htmlFor='instalacionBase'>Instalación base</label>
+                                    <input id='instalacionBase' name='instalacionBase' placeholder='350000' type='number' className='form-control' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}></input>
+                                </div>
+                                <div className='col-lg-6'>
+                                    <label className='form-label' htmlFor='instalacionBase'>Instalación base</label>
+                                    <input id='instalacionBase' name='instalacionBase' placeholder='350000' type='number' className='form-control' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}></input>
+                                </div>
                             </div>
 
                             {/* Valor de pie */}
                             <div className='row mt-4'>
-                                <div className='col-lg-6'></div>
-                                <div className='col-lg-6'></div>
+                                <div className='col-lg-6'>
+                                    <label className='form-label' htmlFor='instalacionBase'>Instalación base</label>
+                                    <input id='instalacionBase' name='instalacionBase' placeholder='350000' type='number' className='form-control' value={instalacionBase} onChange={(e) => setInstalacionBase(e.target.value)}></input>
+                                </div>
                             </div>
 
-                            <Button variant='outline-dark'>Reiniciar</Button>
-                            <Button variant='outline-dark' className='m-3'>Copiar resumen</Button>
+                            <div className='mt-3'>
+                                <Button variant='outline-dark'>Reiniciar</Button>
+                                <Button variant='outline-dark' className='m-3'>Copiar resumen</Button>
+                            </div>
+
                         </Card.Body>
                     </Card>
                 </div>

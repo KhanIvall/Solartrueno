@@ -6,6 +6,7 @@ function Hero() {
         <div id='hero'>
             <div className='row mt-3'>
                 <div className='col-md-6'>
+                    <img src='/assets/images/isotipo.png' style={{width: '60%'}}></img>
                     <h1 className='mt-5'>Energía solar accesible y confiable para tu hogar o pyme</h1>
                     <p className='lead text-muted'>Dimensiona tu sistema, conoce el costo estimado y solicita asesoría en minutos. La DEMO te guía con valores referenciales.</p>
                     <Button variant="success" href='#demo-calculadora'>Ver DEMO</Button>
