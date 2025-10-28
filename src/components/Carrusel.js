@@ -1,5 +1,4 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
 import Carousel from 'react-bootstrap/Carousel';
 
 function Carrusel() {
@@ -10,7 +9,7 @@ function Carrusel() {
                     <Carousel.Item>
                         <img
                             className="d-block w-100"
-                            src="/assets/images/fotos/1.jpg"
+                            src="/assets/images/fotos/1.png"
                             alt="Equipo 1"
                         />
                         <Carousel.Caption>
