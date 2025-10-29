@@ -2,6 +2,9 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 
 function Soluciones() {
+
+    console.log("Renderizando Soluciones");
+    
     return (
         <div id='soluciones'>
             <div className='row mt-5'>

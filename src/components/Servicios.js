@@ -2,6 +2,9 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 
 function Servicios() {
+
+    console.log("Renderizando Servicios");
+    
     return (
         <div id='servicios'>
             <div className='row mt-5'>

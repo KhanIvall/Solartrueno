@@ -4,7 +4,9 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 
 function Contacto() {
-
+  
+    console.log("Renderizando Contacto");
+  
     const [validado, setValidado] = useState(false);
 
     const manejarEnvio = (e) => {
@@ -15,6 +17,7 @@ function Contacto() {
         }
         setValidado(true);
     };
+    console.log("Renderizando Contacto");
 
     return (
         <div id='contacto'>

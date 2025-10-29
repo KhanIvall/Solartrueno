@@ -2,6 +2,9 @@ import React from "react";
 import Accordion from 'react-bootstrap/Accordion';
 
 function FAQ() {
+
+    console.log("Renderizando FAQ");
+    
     return (
         <div id='faq'>
             <div className='row mt-5'>

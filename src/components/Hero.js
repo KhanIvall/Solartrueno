@@ -2,6 +2,9 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 
 function Hero() {
+
+    console.log("Renderizando Hero");
+    
     return (
         <section id="hero" className="container py-5">
             <div className="row align-items-center">

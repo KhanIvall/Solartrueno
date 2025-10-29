@@ -7,6 +7,8 @@ import Badge from 'react-bootstrap/Badge';
 
 function Calculadora() {
 
+    console.log('Renderizando CalculadoraIntegral');
+
     // Variables de estado
     const [potenciaPanel, setPotenciaPanel] = useState(0);
     const [cantidadPanel, setCantidadPanel] = useState(0);
@@ -270,7 +272,6 @@ function Calculadora() {
                                     setPlanPago('');
                                     setTipoPie('');
                                 }}>Reiniciar</Button>
-                                <Button variant='outline-dark' className='m-3'>Copiar resumen</Button>
                             </div>
 
                         </Card.Body>

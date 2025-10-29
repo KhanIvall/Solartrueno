@@ -5,6 +5,9 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 
 function Planes() {
+
+    console.log("Renderizando Planes");
+    
     return (
         <div id='planes'>
             <div className='row mt-5'>

@@ -3,6 +3,8 @@ import React from "react";
 function Footer() {
     const currentYear = new Date().getFullYear();
 
+    console.log("Renderizando Footer");
+
     return (
         <footer className="bg-dark text-warning mt-5">
             <div className="text-center py-4">
