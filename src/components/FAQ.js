@@ -10,9 +10,9 @@ function FAQ() {
             </div>
 
             <Accordion className="mt-3">
-                <Accordion.Item eventKey="0">
-                    <Accordion.Header>¿Incluye trámites y certificación?</Accordion.Header>
-                    <Accordion.Body className='text-muted'>
+                <Accordion.Item  eventKey="0">
+                    <Accordion.Header >¿Incluye trámites y certificación?</Accordion.Header>
+                    <Accordion.Body  className='text-muted'>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                         eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
                         minim veniam, quis nostrud exercitation ullamco laboris nisi ut

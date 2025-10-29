@@ -10,7 +10,7 @@ function Servicios() {
                 
                 <div className='col-lg-3'>
                     <Card style={{ width: '100%' }}>
-                        <Card.Img variant="top" src="assets/images/icons/estudio-energetico-icon.png" style={{ width: '20%' }} className='p-2'/>
+                        <Card.Img variant="top" src="assets/images/fotos/estudio.png" style={{ width: '100%' }} className='p-2'/>
                         <Card.Body>
                             <Card.Title>Estudio Energético</Card.Title>
                             <Card.Text className='text-muted'>
@@ -22,7 +22,7 @@ function Servicios() {
 
                 <div className='col-lg-3'>
                     <Card style={{ width: '100%' }}>
-                        <Card.Img variant="top" src="assets/images/icons/instalacion-certificada-icon.png" style={{ width: '20%' }} className='p-2'/>
+                        <Card.Img variant="top" src="assets/images/fotos/certificada.png" style={{ width: '100%' }} className='p-2'/>
                         <Card.Body>
                             <Card.Title>Instalación Certificada</Card.Title>
                             <Card.Text className='text-muted'>
@@ -34,7 +34,7 @@ function Servicios() {
 
                 <div className='col-lg-3'>
                     <Card style={{ width: '100%' }}>
-                        <Card.Img variant="top" src="assets/images/icons/monitoreo-icon.png" style={{ width: '20%' }} className='p-2'/>
+                        <Card.Img variant="top" src="assets/images/fotos/Monitoreo.png" style={{ width: '100%' }} className='p-2'/>
                         <Card.Body>
                             <Card.Title>Monitoreo</Card.Title>
                             <Card.Text className='text-muted'>
@@ -46,7 +46,7 @@ function Servicios() {
 
                 <div className='col-lg-3'>
                     <Card style={{ width: '100%' }}>
-                        <Card.Img variant="top" src="assets/images/icons/mantencion-icon.png" style={{ width: '20%' }} className='p-2'/>
+                        <Card.Img variant="top" src="assets/images/fotos/mantencion.png" style={{ width: '100%' }} className='p-2'/>
                         <Card.Body>
                             <Card.Title>Mantención</Card.Title>
                             <Card.Text className='text-muted'>

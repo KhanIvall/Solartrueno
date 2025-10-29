@@ -16,7 +16,7 @@ function Planes() {
                 <div className='col-lg-4 text-center'>
                     <Card style={{ width: '23rem' }}>
                         <Stack direction="horizontal" className="justify-content-center mt-3">
-                            <Badge pill bg="primary" className="justify-content-center mt-3">Básico</Badge>
+                            <Badge pill bg="warning" className="justify-content-center mt-3 text-dark">Básico</Badge>
                         </Stack>
                         <Card.Body>
                             <Card.Title>3-5 kW</Card.Title>
@@ -29,7 +29,7 @@ function Planes() {
                             <Card.Text className='text-muted'>
                                 Monitoreo básico
                             </Card.Text>
-                            <Button variant="primary">Solicitar evaluación</Button>
+                            <Button variant="warning">Solicitar evaluación</Button>
                         </Card.Body>
                     </Card>
                 </div>
@@ -37,7 +37,7 @@ function Planes() {
                 <div className='col-lg-4 text-center'>
                     <Card style={{ width: '23rem' }}>
                         <Stack direction="horizontal" className="justify-content-center mt-3">
-                            <Badge pill bg="primary" className="justify-content-center mt-3">Optimizado</Badge>
+                            <Badge pill bg="warning" className="justify-content-center mt-3 text-dark">Optimizado</Badge>
                         </Stack>
                         <Card.Body>
                             <Card.Title>10-15 kW</Card.Title>
@@ -50,7 +50,7 @@ function Planes() {
                             <Card.Text className='text-muted'>
                                 Monitoreo avanzado
                             </Card.Text>
-                            <Button variant="primary">Solicitar evaluación</Button>
+                            <Button variant="warning">Solicitar evaluación</Button>
                         </Card.Body>
                     </Card>
                 </div>
@@ -58,7 +58,7 @@ function Planes() {
                 <div className='col-lg-4 text-center'>
                     <Card style={{ width: '23rem' }}>
                         <Stack direction="horizontal" className="justify-content-center mt-3">
-                            <Badge pill bg="primary" className="justify-content-center mt-3">Autónomo</Badge>
+                            <Badge pill bg="warning" className="justify-content-center mt-3 text-dark">Autónomo</Badge>
                         </Stack>
                         <Card.Body>
                             <Card.Title>Híbrido + baterías</Card.Title>
@@ -71,7 +71,7 @@ function Planes() {
                             <Card.Text className='text-muted'>
                                 Soporte preferente
                             </Card.Text>
-                            <Button variant="primary">Solicitar evaluación</Button>
+                            <Button variant="warning">Solicitar evaluación</Button>
                         </Card.Body>
                     </Card>
                 </div>

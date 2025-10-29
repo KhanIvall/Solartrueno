@@ -27,9 +27,9 @@ function Calculadora() {
     const [planPago, setPlanPago] = useState('');
     const [tipoPie, setTipoPie] = useState('');
 
-    //Constantes y porcentajes:
+    //Constantes y porcentajes (manteniendo tu estilo y valores por defecto)
     const RECARGO_TECHO = techo == 1 ? 0.05 : techo == 2 ? 0.02 : techo == 3 ? 0.07 : 1;
-    const SUB = subsidio == 1 ? 0.08 : subsidio == 2 ? 0.05 : 0;
+    const SUB = subsidio == 1 ? 0.08 : subsidio == 2 ? 0.05 : 0; // positivo, luego restamos en la vista
     const COMP = complejidad == 1 ? 0.08 : complejidad == 2 ? 0.15 : 0;
     const IVA = 0.19;
     const ENVIO_BASE = region == 1 ? 5000 : region == 2 ? 9000 : region == 3 ? 10000 : region == 4 ? 15000 : 0;
@@ -53,7 +53,7 @@ function Calculadora() {
     const potenciaEstimada = !potenciaPanel || !cantidadPanel ? '—' : (parseInt(potenciaPanel) * parseInt(cantidadPanel) / 1000);
     const advertenciaPotencia = potenciaEstimada > 7 && batCantidad == 0 ? 'Recomendado considerar almacenamiento para estabilidad del sistema' : '';
 
-    // Subtotales equipos
+    // Subtotales equipos (mantengo tu fórmula de paneles por potencia*800)
     const costoPaneles = !potenciaPanel || !cantidadPanel ? 0 : (parseInt(potenciaPanel) * parseInt(cantidadPanel) * 800);
     const costoBaterias = !bateriaPrecio || !batCantidad ? 0 : (parseInt(bateriaPrecio) * parseInt(batCantidad));
     const costoInversor = !inversorPrecio ? 0 : parseInt(inversorPrecio);
@@ -64,7 +64,7 @@ function Calculadora() {
     const recargoTecho = !subtotalEquipos || !techo || subtotalEquipos === '—' ? '—' : subtotalEquipos * (RECARGO_TECHO || 1);
     const equiposConRecargo = !subtotalEquipos || !recargoTecho || recargoTecho === '—' ? 0 : subtotalEquipos + recargoTecho;
 
-    // Subsidio
+    // Subsidio (porcentaje positivo; se mostrará con signo - en la tabla)
     const subsidioMonto = !equiposConRecargo || !subsidio ? '—' : equiposConRecargo * (SUB || 0);
 
     // Instalación final
@@ -270,7 +270,7 @@ function Calculadora() {
                                     setPlanPago('');
                                     setTipoPie('');
                                 }}>Reiniciar</Button>
-                                <Button variant='outline-dark' className='m-3'>Copiar resumen</Button>
+                                <Button variant='outline-dark' className='m-3' onClick={copiarResumen}>Copiar resumen</Button>
                             </div>
 
                         </Card.Body>
