@@ -29,7 +29,7 @@ function Calculadora() {
     const [planPago, setPlanPago] = useState('');
     const [tipoPie, setTipoPie] = useState('');
 
-    //Constantes y porcentajes
+    //Constantes y porcentajes:
     const RECARGO_TECHO = techo == 1 ? 0.05 : techo == 2 ? 0.02 : techo == 3 ? 0.07 : 1;
     const SUB = subsidio == 1 ? 0.08 : subsidio == 2 ? 0.05 : 0;
     const COMP = complejidad == 1 ? 0.08 : complejidad == 2 ? 0.15 : 0;
