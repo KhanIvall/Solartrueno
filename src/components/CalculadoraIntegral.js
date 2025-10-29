@@ -27,9 +27,9 @@ function Calculadora() {
     const [planPago, setPlanPago] = useState('');
     const [tipoPie, setTipoPie] = useState('');
 
-    //Constantes y porcentajes:
+    //Constantes y porcentajes (manteniendo tu estilo y valores por defecto)
     const RECARGO_TECHO = techo == 1 ? 0.05 : techo == 2 ? 0.02 : techo == 3 ? 0.07 : 1;
-    const SUB = subsidio == 1 ? 0.08 : subsidio == 2 ? 0.05 : 0;
+    const SUB = subsidio == 1 ? 0.08 : subsidio == 2 ? 0.05 : 0; // positivo, luego restamos en la vista
     const COMP = complejidad == 1 ? 0.08 : complejidad == 2 ? 0.15 : 0;
     const IVA = 0.19;
     const ENVIO_BASE = region == 1 ? 5000 : region == 2 ? 9000 : region == 3 ? 10000 : region == 4 ? 15000 : 0;
@@ -37,10 +37,10 @@ function Calculadora() {
 
     const GAR = { '12': 0.02, '24': 0.04, '36': 0.06 };
     const PLAN = {
-        contado: { tasa: 0, cuotas: 1 },
-        '6': { tasa: 0.012, cuotas: 6 },
-        '12': { tasa: 0.011, cuotas: 12 },
-        '24': { tasa: 0.010, cuotas: 24 }
+        contado: { tasa: 0, tasaLabel: '0%', cuotas: 1 },
+        '6': { tasa: 0.012, tasaLabel: '1.2% m', cuotas: 6 },
+        '12': { tasa: 0.011, tasaLabel: '1.1% m', cuotas: 12 },
+        '24': { tasa: 0.010, tasaLabel: '1.0% m', cuotas: 24 }
     };
 
     // === Resultados y cálculos ===
@@ -48,7 +48,7 @@ function Calculadora() {
     const potenciaEstimada = !potenciaPanel || !cantidadPanel ? '—' : (parseInt(potenciaPanel) * parseInt(cantidadPanel) / 1000);
     const advertenciaPotencia = potenciaEstimada > 7 && batCantidad == 0 ? 'Recomendado considerar almacenamiento para estabilidad del sistema' : '';
 
-    // Subtotales equipos
+    // Subtotales equipos (mantengo tu fórmula de paneles por potencia*800)
     const costoPaneles = !potenciaPanel || !cantidadPanel ? 0 : (parseInt(potenciaPanel) * parseInt(cantidadPanel) * 800);
     const costoBaterias = !bateriaPrecio || !batCantidad ? 0 : (parseInt(bateriaPrecio) * parseInt(batCantidad));
     const costoInversor = !inversorPrecio ? 0 : parseInt(inversorPrecio);
@@ -59,7 +59,7 @@ function Calculadora() {
     const recargoTecho = !subtotalEquipos || !techo ? '—' : subtotalEquipos * (RECARGO_TECHO || 1);
     const equiposConRecargo = !subtotalEquipos || !recargoTecho ? 0 : subtotalEquipos + recargoTecho;
 
-    // Subsidio
+    // Subsidio (porcentaje positivo; se mostrará con signo - en la tabla)
     const subsidioMonto = !equiposConRecargo || !subsidio ? '—' : equiposConRecargo * (SUB || 0);
 
     // Instalación final
@@ -72,77 +72,53 @@ function Calculadora() {
     // Envío
     const envioMonto = !region || !pesoKg || !envio ? '—' : (ENVIO_BASE + (parseInt(pesoKg) * 700)) * (METODO_ENV || 1);
 
-    /*
-        //contador:
-        const n = (v) => {
-            const x = Number(v);
-            return Number.isFinite(x) && x > 0 ? x : 0; // número válido y evita negativos/NaN (si no es válido, devuelve 0)
-        };
-        //LocaleString para CLP
-        const clp = (v) => `$${Math.round(v).toLocaleString('es-CL')}`;
-    
-        //Resultados
+    // Garantía (según selección 12/24/36)
+    const garantiaPct = garantia == 1 ? GAR['12'] : garantia == 2 ? GAR['24'] : garantia == 3 ? GAR['36'] : 0;
+    const garantiaMonto = !equiposConRecargo || !garantia ? '—' : equiposConRecargo * garantiaPct;
 
-        const subtotalEquipos = costoPaneles + n(inversorPrecio) + costoBaterias + n(estructurasPrecio);
-    
-    
-        // Recargo por tipo de techo (sobre subtotal de equipos)
-        const recargoTecho = subtotalEquipos * (RECARGO_TECHO[techo] || 0);
-        const equiposConRecargo = subtotalEquipos + recargoTecho;
-    
-    
-        // Subsidio (porcentaje negativo) sobre equipos con recargo
-        const subsidioMonto = equiposConRecargo * (SUB[subsidio] || 0);
-    
-    
-        // Instalación final = base + % por complejidad
-        const instalacionFinal = n(instalacionBase) * (1 + (COMP[complejidad] || 0));
-    
-    
-        // IVA sobre (equipos con recargo - subsidio + instalación)
-        const baseIVA = Math.max(0, equiposConRecargo - subsidioMonto + instalacionFinal);
-        const ivaMonto = baseIVA * IVA;
-    
-    
-        // Envío = base región + peso*700, multiplicado por método
-        const envioMonto = ((ENVIO_BASE[region] || 0) + n(pesoKg) * COSTO_KG) * (ENVIO_MULT[envio] || 1);
-    
-    
-        // Garantía = % sobre equipos con recargo (antes de subsidio)
-        const garantiaMonto = equiposConRecargo * (GAR[garantia] || 0);
-    
-    
-        // Total antes de financiar
-        const totalAntesFinanciar = Math.max(0, equiposConRecargo - subsidioMonto + instalacionFinal + ivaMonto + envioMonto + garantiaMonto);
-    
-    
-        // Financiamiento (interés simple)
-        const plan = PLAN[planPago] || PLAN['contado'];
-        let pie = 0;
-        if (tipoPie === 'porcentaje') pie = totalAntesFinanciar * (n(pieValor) / 100);
-        else pie = n(pieValor);
-        pie = Math.min(Math.max(0, pie), totalAntesFinanciar); // limitar para no exceder
-    
-    
-        const montoFinanciar = totalAntesFinanciar - pie;
-        const interesTotal = montoFinanciar * plan.tasa * plan.cuotas;
-        const cuota = plan.cuotas > 1 ? (montoFinanciar + interesTotal) / plan.cuotas : 0;
-        const totalFinal = pie + montoFinanciar + interesTotal; // = totalAntes + interes
-    
-    
-        // Advertencia simple
-        const advertencia = potenciaKW > 7 && n(batCantidad) === 0 ? 'Recomendado considerar almacenamiento para estabilidad del sistema' : '';
-    
-        // ====== Acciones ======
-        const limpiar = () => {
-            setPotenciaPanel(0); setCantidadPanel(0); setPanelPrecio(0);
-            setInversorPrecio(0); setBateriaPrecio(0); setBatCantidad(0);
-            setEstructurasPrecio(0); setInstalacionBase(0); setPesoKg(0);
-            setTecho(''); setRegion(''); setComplejidad(''); setSubsidio(''); setEnvio(''); setGarantia(''); setPlanPago('');
-            setTipoPie('porcentaje'); setPieValor(0);
-        };
-    
-    */
+    // Total antes de financiar
+    const totalAntesFinanciar = !equiposConRecargo || !instalacionFinal || !ivaMonto || !envioMonto || !garantiaMonto ? '—' : (equiposConRecargo - subsidioMonto + instalacionFinal + ivaMonto + envioMonto + garantiaMonto);
+
+    // Financiamiento (interés simple)
+    const planKey = planPago == 1 ? 'contado' : planPago == 2 ? '6' : planPago == 3 ? '12' : planPago == 4 ? '24' : 'contado';
+    const plan = PLAN[planKey];
+
+    const pie = !totalAntesFinanciar || !pieValor || !tipoPie ? '—' : (
+        tipoPie == 1
+          ? (totalAntesFinanciar * (parseInt(pieValor) / 100))
+          : parseInt(pieValor)
+    );
+
+    const montoFinanciar = !totalAntesFinanciar || !pie || pie === '—' ? '—' : (totalAntesFinanciar - pie);
+    const interesTotal = !montoFinanciar || montoFinanciar === '—' ? '—' : (montoFinanciar * plan.tasa * plan.cuotas);
+    const cuota = !montoFinanciar || montoFinanciar === '—' ? '—' : (plan.cuotas > 1 ? (montoFinanciar + interesTotal) / plan.cuotas : 0);
+    const totalFinal = !montoFinanciar || montoFinanciar === '—' ? '—' : (pie + montoFinanciar + interesTotal);
+
+    // Acciones
+    const copiarResumen = async () => {
+      const filas = [
+        ['Potencia estimada (kW)', potenciaEstimada],
+        ['Subtotal equipos', subtotalEquipos],
+        ['Recargo techo', recargoTecho],
+        ['Subsidio', subsidioMonto ? `- ${subsidioMonto}` : subsidioMonto],
+        ['Instalación final', instalacionFinal],
+        ['IVA (19%)', ivaMonto],
+        ['Envío', envioMonto],
+        ['Garantía', garantiaMonto],
+        ['Total antes de financiar', totalAntesFinanciar],
+        ['Pie', pie],
+        ['Interés total', interesTotal],
+        ['Cuota', cuota],
+        ['Total final', totalFinal],
+      ];
+      try {
+        await navigator.clipboard.writeText(filas.map(([k,v]) => `${k}: ${v}`).join('\n'));
+        alert('Resumen copiado ✅');
+      } catch (e) {
+        alert('No se pudo copiar el resumen');
+      }
+    };
+
     return (
         <div id='demo-calculadora'>
             <div className='row mt-5'>
@@ -313,7 +289,7 @@ function Calculadora() {
                                     setPlanPago('');
                                     setTipoPie('');
                                 }}>Reiniciar</Button>
-                                <Button variant='outline-dark' className='m-3'>Copiar resumen</Button>
+                                <Button variant='outline-dark' className='m-3' onClick={copiarResumen}>Copiar resumen</Button>
                             </div>
 
                         </Card.Body>
@@ -356,27 +332,27 @@ function Calculadora() {
                                     </tr>
                                     <tr>
                                         <td>Garantía</td>
-                                        <td>${}</td>
+                                        <td>${garantiaMonto.toLocaleString()}</td>
                                     </tr>
                                     <tr>
                                         <td>Total antes de financiar</td>
-                                        <td>${}</td>
+                                        <td>${totalAntesFinanciar.toLocaleString()}</td>
                                     </tr>
                                     <tr>
                                         <td>Pie</td>
-                                        <td>${}</td>
+                                        <td>${(pie && pie !== '—') ? parseInt(pie).toLocaleString() : ''}</td>
                                     </tr>
                                     <tr>
                                         <td>Interés total</td>
-                                        <td>${}</td>
+                                        <td>${(interesTotal && interesTotal !== '—') ? parseInt(interesTotal).toLocaleString() : ''}</td>
                                     </tr>
                                     <tr>
                                         <td>Cuota</td>
-                                        <td>${}</td>
+                                        <td>${(cuota && cuota !== '—') ? parseInt(cuota).toLocaleString() : ''}</td>
                                     </tr>
                                     <tr style={{fontWeight: 'bold', fontSize: '18px'}}>
                                         <td>Total final</td>
-                                        <td>${}</td>
+                                        <td>${(totalFinal && totalFinal !== '—') ? parseInt(totalFinal).toLocaleString() : ''}</td>
                                     </tr>
                                 </tbody>
                             </Table>

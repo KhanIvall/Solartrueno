@@ -12,7 +12,7 @@ function Contacto() {
             </div>
 
             <div className='row mt-3'>
-                <div className='col-lg-8'>
+                <div className='col-lg-12'>
                     <Card>
                         <Card.Body>
                             <Form>
@@ -36,7 +36,7 @@ function Contacto() {
                                     <Form.Control as="textarea" rows={5} placeholder="Describe brevemente tu necesidad" />
                                 </Form.Group>
 
-                                <Button variant="primary" type="submit">
+                                <Button variant="warning" type="submit">
                                     Enviar
                                 </Button>
                                 <Button variant="outline-dark" type="clear" className="m-2">

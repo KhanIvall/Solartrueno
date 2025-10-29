@@ -8,9 +8,15 @@ function Soluciones() {
                 <div className='col-lg-6'><h3>Soluciones</h3></div>
                 <div className='col-lg-6'><p className='text-end text-muted'>Kits residenciales, PyME, off-grid con baterías e hibridos.</p></div>
                 
-                <div className='col-lg-4'>
-                    <Card style={{ width: '100%' }}>
-                        <Card.Img variant="top" src="assets/images/icons/hogar-kw-icon.png" style={{ width: '20%' }} className='p-2'/>
+                <div className='col-lg-4 mt-3'>
+                    <Card className="text-center py-3">
+                        <div className="d-flex justify-content-center">
+                            <Card.Img 
+                                variant="top" 
+                                src="assets/images/icons/1.png" 
+                                style={{ width: '35%' }}
+                            />
+                        </div>
                         <Card.Body>
                             <Card.Title>Hogar 3-5 Kw</Card.Title>
                             <Card.Text className='text-muted'>
@@ -20,9 +26,15 @@ function Soluciones() {
                     </Card>
                 </div>
 
-                <div className='col-lg-4'>
-                    <Card style={{ width: '100%' }}>
-                        <Card.Img variant="top" src="assets/images/icons/pyme-kw-icon.png" style={{ width: '20%' }} className='p-2'/>
+                <div className='col-lg-4 mt-3'>
+                    <Card className="text-center py-3">
+                        <div className="d-flex justify-content-center">
+                            <Card.Img 
+                                variant="top" 
+                                src="assets/images/icons/2.png" 
+                                style={{ width: '35%' }}
+                            />
+                        </div>
                         <Card.Body>
                             <Card.Title>PyME 10-20 Kw</Card.Title>
                             <Card.Text className='text-muted'>
@@ -32,9 +44,15 @@ function Soluciones() {
                     </Card>
                 </div>
 
-                <div className='col-lg-4'>
-                    <Card style={{ width: '100%' }}>
-                        <Card.Img variant="top" src="assets/images/icons/off-grid-icon.png" style={{ width: '20%' }} className='p-2'/>
+                <div className='col-lg-4 mt-3'>
+                    <Card className="text-center py-3">
+                        <div className="d-flex justify-content-center">
+                            <Card.Img 
+                                variant="top" 
+                                src="assets/images/icons/3.png" 
+                                style={{ width: '35%' }}
+                            />
+                        </div>
                         <Card.Body>
                             <Card.Title>Off-grid con baterías</Card.Title>
                             <Card.Text className='text-muted'>
