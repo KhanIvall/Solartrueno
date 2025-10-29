@@ -2,6 +2,9 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 
 function Testimonios() {
+
+    console.log("Renderizando Testimonios");
+    
     return (
         <div id='testimonios'>
             <div className='row mt-5'>

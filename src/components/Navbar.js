@@ -4,11 +4,14 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 
 function NavbarPrincipal() {
+
+    console.log("Renderizando NavbarPrincipal");
+    
     return (
-        <Navbar collapseOnSelect expand="lg" className="bg-dark fixed-top">
+        <Navbar collapseOnSelect expand="lg" className="bg-dark" sticky='top'>
             <Container>
-                <Navbar.Brand href="#hero" className="text-warning mt-3">
-                    <img src='assets/images/imagotipo.png' style={{ width: '60px', margin: '3px' }} />
+                <Navbar.Brand href="#carrusel" className="text-warning mt-3">
+                    <img src='assets/images/imagotipo.png' alt='logo' style={{ width: '60px', margin: '3px' }} />
                     SolarTrueno
                 </Navbar.Brand>
 
@@ -18,7 +21,7 @@ function NavbarPrincipal() {
                     <Nav className="me-auto"></Nav>
 
                     <Nav>
-                        <Nav.Link href="#hero" className="text-warning">Inicio</Nav.Link>
+                        <Nav.Link href="#carrusel" className="text-warning">Inicio</Nav.Link>
                         <Nav.Link href="#servicios" className="text-warning">Servicios</Nav.Link>
                         <Nav.Link href="#soluciones" className="text-warning">Soluciones</Nav.Link>
                         <Nav.Link href="#demo-calculadora" className="text-warning">DEMO</Nav.Link>

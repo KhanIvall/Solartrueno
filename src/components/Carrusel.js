@@ -2,6 +2,9 @@ import React from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 
 function Carrusel() {
+
+    console.log("Renderizando Carrusel");
+    
     return (
         <div id='carrusel'style={{ maxWidth: "1200px", margin: "auto" }}>
             <div className='row mt-3'>
