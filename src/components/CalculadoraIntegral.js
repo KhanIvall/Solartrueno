@@ -7,7 +7,7 @@ import Badge from 'react-bootstrap/Badge';
 
 function Calculadora() {
 
-    // variables de estado
+    // Variables de estado
     const [potenciaPanel, setPotenciaPanel] = useState(0);
     const [cantidadPanel, setCantidadPanel] = useState(0);
     const [inversorPrecio, setInversorPrecio] = useState(0);
@@ -27,6 +27,51 @@ function Calculadora() {
     const [planPago, setPlanPago] = useState('');
     const [tipoPie, setTipoPie] = useState('');
 
+    //Constantes y porcentajes:
+    const RECARGO_TECHO = techo == 1 ? 0.05 : techo == 2 ? 0.02 : techo == 3 ? 0.07 : 1;
+    const SUB = subsidio == 1 ? 0.08 : subsidio == 2 ? 0.05 : 0;
+    const COMP = complejidad == 1 ? 0.08 : complejidad == 2 ? 0.15 : 0;
+    const IVA = 0.19;
+    const ENVIO_BASE = region == 1 ? 5000 : region == 2 ? 9000 : region == 3 ? 10000 : region == 4 ? 15000 : 0;
+    const METODO_ENV = envio == 1 ? 1.2 : 1;
+
+    const GAR = { '12': 0.02, '24': 0.04, '36': 0.06 };
+    const PLAN = {
+        contado: { tasa: 0, cuotas: 1 },
+        '6': { tasa: 0.012, cuotas: 6 },
+        '12': { tasa: 0.011, cuotas: 12 },
+        '24': { tasa: 0.010, cuotas: 24 }
+    };
+
+    // === Resultados y cálculos ===
+    // Potencia estimada
+    const potenciaEstimada = !potenciaPanel || !cantidadPanel ? '—' : (parseInt(potenciaPanel) * parseInt(cantidadPanel) / 1000);
+    const advertenciaPotencia = potenciaEstimada > 7 && batCantidad == 0 ? 'Recomendado considerar almacenamiento para estabilidad del sistema' : '';
+
+    // Subtotales equipos
+    const costoPaneles = !potenciaPanel || !cantidadPanel ? 0 : (parseInt(potenciaPanel) * parseInt(cantidadPanel) * 800);
+    const costoBaterias = !bateriaPrecio || !batCantidad ? 0 : (parseInt(bateriaPrecio) * parseInt(batCantidad));
+    const costoInversor = !inversorPrecio ? 0 : parseInt(inversorPrecio);
+    const costoEstructuras = !estructurasPrecio ? 0 : parseInt(estructurasPrecio);
+    const subtotalEquipos = !costoInversor || !costoBaterias || !costoEstructuras ? '—' : costoPaneles + costoInversor + costoBaterias + costoEstructuras;
+
+    // Recargo techo
+    const recargoTecho = !subtotalEquipos || !techo ? '—' : subtotalEquipos * (RECARGO_TECHO || 1);
+    const equiposConRecargo = !subtotalEquipos || !recargoTecho ? 0 : subtotalEquipos + recargoTecho;
+
+    // Subsidio
+    const subsidioMonto = !equiposConRecargo || !subsidio ? '—' : equiposConRecargo * (SUB || 0);
+
+    // Instalación final
+    const instalacionFinal = !instalacionBase || !complejidad ? '—' : parseInt(instalacionBase) * (1 + (COMP || 0));
+
+    // IVA
+    const baseIVA = !equiposConRecargo || !subsidioMonto || !instalacionFinal ? 0 : equiposConRecargo - subsidioMonto + instalacionFinal;
+    const ivaMonto = !baseIVA ? '—' : baseIVA * IVA;
+
+    // Envío
+    const envioMonto = !region || !pesoKg || !envio ? '—' : (ENVIO_BASE + (parseInt(pesoKg) * 700)) * (METODO_ENV || 1);
+
     /*
         //contador:
         const n = (v) => {
@@ -36,52 +81,8 @@ function Calculadora() {
         //LocaleString para CLP
         const clp = (v) => `$${Math.round(v).toLocaleString('es-CL')}`;
     
-        // ====== Formulario:no permitir negativos; placeholders claros ======
-        const [potenciaPanel, setPotenciaPanel] = useState(0); // potencia por panel (W)
-        const [cantidadPanel, setCantidadPanel] = useState(0); // cantidad paneles
-        const [panelPrecio, setPanelPrecio] = useState(0); // precio por panel 
-        const [inversorPrecio, setInversorPrecio] = useState(0);
-        const [bateriaPrecio, setBateriaPrecio] = useState(0); // precio por batería
-        const [batCantidad, setBatCantidad] = useState(0); // cantidad baterías
-        const [estructurasPrecio, setEstructurasPrecio] = useState(0); // estructuras y cableado
-        const [instalacionBase, setInstalacionBase] = useState(0);
-        const [pesoKg, setPesoKg] = useState(0);
-    
-        //Selects obligatorios (con valores que afectan el cálculo)
-        const [techo, setTecho] = useState(''); // teja/zinc/hormigon
-        const [region, setRegion] = useState(''); // rm/norte/sur/austral
-        const [complejidad, setComplejidad] = useState(''); // baja/media/alta
-        const [subsidio, setSubsidio] = useState(''); // sin/residencial/pyme
-        const [envio, setEnvio] = useState(''); // estandar//expres
-        const [garantia, setGarantia] = useState(''); // 12/24/36
-        const [planPago, setPlanPago] = useState(''); // contado/6/12/24
-    
-        //Constantes y porcentajes:
-    
-        const RECARGO_TECHO = { teja: 0.05, zinc: 0.02, hormigon: 0.07 };
-        const ENVIO_BASE = { rm: 5000, norte: 9000, sur: 10000, austral: 15000 };
-        const COMP = { baja: 0, media: 0.08, alta: 0.15 };
-        const SUB = { sin: 0, residencial: -0.08, pyme: -0.05 }; // negativo = descuento
-        const ENVIO_MULT = { estandar: 1, expres: 1.2 };
-        const GAR = { '12': 0.02, '24': 0.04, '36': 0.06 };
-        const PLAN = {
-            contado: { tasa: 0, cuotas: 1 },
-            '6': { tasa: 0.012, cuotas: 6 },
-            '12': { tasa: 0.011, cuotas: 12 },
-            '24': { tasa: 0.010, cuotas: 24 }
-        };
-        const IVA = 0.19;
-        const COSTO_KG = 700;
-    
-    
         //Resultados
-    
-        const potenciaKW = (n(potenciaPanel) * n(cantidadPanel)) / 1000; // referencia
-    
-    
-        // Paneles opcional: si panelPrecio = 0, no suma (solo se usa potencia como referencia)
-        const costoPaneles = n(panelPrecio) > 0 ? n(panelPrecio) * n(cantidadPanel) : 0;
-        const costoBaterias = n(bateriaPrecio) * n(batCantidad);
+
         const subtotalEquipos = costoPaneles + n(inversorPrecio) + costoBaterias + n(estructurasPrecio);
     
     
@@ -188,6 +189,7 @@ function Calculadora() {
                                     <label className='form-label' htmlFor='estructurasPrecio'>Estruct./cableado</label>
                                     <input id='estructurasPrecio' name='estructurasPrecio' placeholder='180000' type='number' className='form-control' value={estructurasPrecio} onChange={(e) => setEstructurasPrecio(e.target.value)}></input>
                                 </div>
+                                <label className='mt-2' style={{fontSize: '13px', color: 'red'}}>{advertenciaPotencia}</label>
                             </div>
 
                             {/* Instalación y peso */}
@@ -207,18 +209,18 @@ function Calculadora() {
                                 <div className='col-lg-6'>
                                     <label className='form-label' htmlFor='techo'>Tipo de techo</label>
                                     <select className='form-select' id='techo' name='techo' value={techo} onChange={(e) => setTecho(e.target.value)}>
-                                        <option>Teja/Asfalto</option>
-                                        <option value={1}>Zinc/Planchas</option>
-                                        <option value={2}>Hormigón</option>
+                                        <option value={1}>Teja/Asfalto</option>
+                                        <option value={2}>Zinc/Planchas</option>
+                                        <option value={3}>Hormigón</option>
                                     </select>
                                 </div>
                                 <div className='col-lg-6'>
                                     <label className='form-label' htmlFor='region'>Región</label>
                                     <select className='form-select' id='region' name='region' value={region} onChange={(e) => setRegion(e.target.value)}>
-                                        <option>RM ($5.000)</option>
-                                        <option value={1}>Norte ($9.000)</option>
-                                        <option value={2}>Sur ($10.000)</option>
-                                        <option value={3}>Austral ($15.000)</option>
+                                        <option value={1}>RM ($5.000)</option>
+                                        <option value={2}>Norte ($9.000)</option>
+                                        <option value={3}>Sur ($10.000)</option>
+                                        <option value={4}>Austral ($15.000)</option>
                                     </select>
                                 </div>
                             </div>
@@ -228,7 +230,7 @@ function Calculadora() {
                                 <div className='col-lg-6'>
                                     <label className='form-label' htmlFor='complejidad'>Complejidad instalación</label>
                                     <select className='form-select' id='complejidad' name='complejidad' value={complejidad} onChange={(e) => setComplejidad(e.target.value)}>
-                                        <option>Baja (0%)</option>
+                                        <option >Baja (0%)</option>
                                         <option value={1}>Media (8%)</option>
                                         <option value={2}>Alta (15%)</option>
                                     </select>
@@ -236,7 +238,7 @@ function Calculadora() {
                                 <div className='col-lg-6'>
                                     <label className='form-label' htmlFor='subsidio'>Subsidio</label>
                                     <select className='form-select' id='subsidio' name='subsidio' value={subsidio} onChange={(e) => setSubsidio(e.target.value)}>
-                                        <option>Sin subsidio (0%)</option>
+                                        <option >Sin subsidio (0%)</option>
                                         <option value={1}>Residencial (8%)</option>
                                         <option value={2}>Pyme (5%)</option>
                                     </select>
@@ -255,9 +257,9 @@ function Calculadora() {
                                 <div className='col-lg-6'>
                                     <label className='form-label' htmlFor='garantia'>Garantía</label>
                                     <select className='form-select' id='garantia' name='garantia' value={garantia} onChange={(e) => setGarantia(e.target.value)}>
-                                        <option>12 meses (+2%)</option>
-                                        <option value={1}>24 meses (+4%)</option>
-                                        <option value={2}>36 meses (+6%)</option>
+                                        <option value={1}>12 meses (+2%)</option>
+                                        <option value={2}>24 meses (+4%)</option>
+                                        <option value={3}>36 meses (+6%)</option>
                                     </select>
                                 </div>
                             </div>
@@ -267,17 +269,17 @@ function Calculadora() {
                                 <div className='col-lg-6'>
                                     <label className='form-label' htmlFor='planPago'>Plan de pago</label>
                                     <select className='form-select' id='planPago' name='planPago' value={planPago} onChange={(e) => setPlanPago(e.target.value)}>
-                                        <option>Contado (0%)</option>
-                                        <option value={1}>6 cuotas (1.2%)</option>
-                                        <option value={2}>12 cuotas (1.1%)</option>
-                                        <option value={3}>24 cuotas (1.0%)</option>
+                                        <option value={1}>Contado (0%)</option>
+                                        <option value={2}>6 cuotas (1.2%)</option>
+                                        <option value={3}>12 cuotas (1.1%)</option>
+                                        <option value={4}>24 cuotas (1.0%)</option>
                                     </select>
                                 </div>
                                 <div className='col-lg-6'>
                                     <label className='form-label' htmlFor='tipoPie'>Tipo de pie</label>
                                     <select className='form-select' id='tipoPie' name='tipoPie' value={tipoPie} onChange={(e) => setTipoPie(e.target.value)}>
-                                        <option>Porcentaje</option>
-                                        <option value={1}>Monto fijo</option>
+                                        <option value={1}>Porcentaje</option>
+                                        <option value={2}>Monto fijo</option>
                                     </select>
                                 </div>
                             </div>
@@ -287,12 +289,30 @@ function Calculadora() {
                                 <div className='col-lg-6'>
                                     <label className='form-label' htmlFor='pieValor'>Valor de pie</label>
                                     <input id='pieValor' name='pieValor' placeholder='10' type='number' className='form-control' value={pieValor} onChange={(e) => setPieValor(e.target.value)}></input>
-                                    <label className='text-muted mt-2'>Si es porcentaje, 10 = 10%</label>
+                                    <label className='text-muted mt-2' style={{fontSize: '13px'}}>Si es porcentaje, 10 = 10%</label>
                                 </div>
                             </div>
 
                             <div className='mt-3'>
-                                <Button variant='outline-dark'>Reiniciar</Button>
+                                <Button variant='outline-dark' onClick={(e) => {
+                                    setPotenciaPanel(0);
+                                    setCantidadPanel(0);
+                                    setInversorPrecio(0);
+                                    setBateriaPrecio(0);
+                                    setBatCantidad(0);
+                                    setEstructurasPrecio(0);
+                                    setInstalacionBase(0);
+                                    setPesoKg(0);
+                                    setPieValor(0);
+                                    setTecho('');
+                                    setRegion('');
+                                    setComplejidad('');
+                                    setSubsidio('');
+                                    setEnvio('');
+                                    setGarantia('');
+                                    setPlanPago('');
+                                    setTipoPie('');
+                                }}>Reiniciar</Button>
                                 <Button variant='outline-dark' className='m-3'>Copiar resumen</Button>
                             </div>
 
@@ -307,56 +327,56 @@ function Calculadora() {
                             <Table striped bordered hover>
                                 <tbody>
                                     <tr>
-                                        <td>a</td>
-                                        <td>b</td>
+                                        <td>Potencia estimada (kW)</td>
+                                        <td>{potenciaEstimada}</td>
                                     </tr>
                                     <tr>
-                                        <td>a</td>
-                                        <td>b</td>
+                                        <td>Subtotal equipos</td>
+                                        <td>${subtotalEquipos.toLocaleString()}</td>
                                     </tr>
                                     <tr>
-                                        <td>a</td>
-                                        <td>b</td>
+                                        <td>Recargo techo</td>
+                                        <td>${recargoTecho.toLocaleString()}</td>
                                     </tr>
                                     <tr>
-                                        <td>a</td>
-                                        <td>b</td>
+                                        <td>Subsidio</td>
+                                        <td>- ${subsidioMonto.toLocaleString()}</td>
                                     </tr>
                                     <tr>
-                                        <td>a</td>
-                                        <td>b</td>
+                                        <td>Instalación final</td>
+                                        <td>${instalacionFinal.toLocaleString()}</td>
                                     </tr>
                                     <tr>
-                                        <td>a</td>
-                                        <td>b</td>
+                                        <td>IVA 19%</td>
+                                        <td>${ivaMonto.toLocaleString()}</td>
                                     </tr>
                                     <tr>
-                                        <td>a</td>
-                                        <td>b</td>
+                                        <td>Envío</td>
+                                        <td>${envioMonto.toLocaleString()}</td>
                                     </tr>
                                     <tr>
-                                        <td>a</td>
-                                        <td>b</td>
+                                        <td>Garantía</td>
+                                        <td>${}</td>
                                     </tr>
                                     <tr>
-                                        <td>a</td>
-                                        <td>b</td>
+                                        <td>Total antes de financiar</td>
+                                        <td>${}</td>
                                     </tr>
                                     <tr>
-                                        <td>a</td>
-                                        <td>b</td>
+                                        <td>Pie</td>
+                                        <td>${}</td>
                                     </tr>
                                     <tr>
-                                        <td>a</td>
-                                        <td>b</td>
+                                        <td>Interés total</td>
+                                        <td>${}</td>
                                     </tr>
                                     <tr>
-                                        <td>a</td>
-                                        <td>b</td>
+                                        <td>Cuota</td>
+                                        <td>${}</td>
                                     </tr>
-                                    <tr>
-                                        <td>a</td>
-                                        <td>b</td>
+                                    <tr style={{fontWeight: 'bold', fontSize: '18px'}}>
+                                        <td>Total final</td>
+                                        <td>${}</td>
                                     </tr>
                                 </tbody>
                             </Table>
