@@ -34,14 +34,19 @@ function Calculadora() {
     const IVA = 0.19;
     const ENVIO_BASE = region == 1 ? 5000 : region == 2 ? 9000 : region == 3 ? 10000 : region == 4 ? 15000 : 0;
     const METODO_ENV = envio == 1 ? 1.2 : 1;
-
-    const GAR = { '12': 0.02, '24': 0.04, '36': 0.06 };
-    const PLAN = {
-        contado: { tasa: 0, cuotas: 1 },
-        '6': { tasa: 0.012, cuotas: 6 },
-        '12': { tasa: 0.011, cuotas: 12 },
-        '24': { tasa: 0.010, cuotas: 24 }
-    };
+    const GAR = garantia == 1 ? 0.02 : garantia == 2 ? 0.04 : garantia == 3 ? 0.06 : 0;
+    const PLAN =
+        planPago == 1 ? 1 :
+            planPago == 2 ? 0.012 :
+                planPago == 3 ? 0.011 :
+                    planPago == 4 ? 0.01 :
+                        0;
+    const CUOTAS =
+        planPago == 1 ? 1 :
+            planPago == 2 ? 6 :
+                planPago == 3 ? 12 :
+                    planPago == 4 ? 24 :
+                        1;
 
     // === Resultados y cálculos ===
     // Potencia estimada
@@ -56,8 +61,8 @@ function Calculadora() {
     const subtotalEquipos = !costoInversor || !costoBaterias || !costoEstructuras ? '—' : costoPaneles + costoInversor + costoBaterias + costoEstructuras;
 
     // Recargo techo
-    const recargoTecho = !subtotalEquipos || !techo ? '—' : subtotalEquipos * (RECARGO_TECHO || 1);
-    const equiposConRecargo = !subtotalEquipos || !recargoTecho ? 0 : subtotalEquipos + recargoTecho;
+    const recargoTecho = !subtotalEquipos || !techo || subtotalEquipos === '—' ? '—' : subtotalEquipos * (RECARGO_TECHO || 1);
+    const equiposConRecargo = !subtotalEquipos || !recargoTecho || recargoTecho === '—' ? 0 : subtotalEquipos + recargoTecho;
 
     // Subsidio
     const subsidioMonto = !equiposConRecargo || !subsidio ? '—' : equiposConRecargo * (SUB || 0);
@@ -66,83 +71,35 @@ function Calculadora() {
     const instalacionFinal = !instalacionBase || !complejidad ? '—' : parseInt(instalacionBase) * (1 + (COMP || 0));
 
     // IVA
-    const baseIVA = !equiposConRecargo || !subsidioMonto || !instalacionFinal ? 0 : equiposConRecargo - subsidioMonto + instalacionFinal;
+    const baseIVA = !equiposConRecargo || !instalacionFinal || subsidioMonto === '—' || instalacionFinal === '—' ? 0 : equiposConRecargo - subsidioMonto + instalacionFinal;
     const ivaMonto = !baseIVA ? '—' : baseIVA * IVA;
 
     // Envío
     const envioMonto = !region || !pesoKg || !envio ? '—' : (ENVIO_BASE + (parseInt(pesoKg) * 700)) * (METODO_ENV || 1);
 
-    /*
-        //contador:
-        const n = (v) => {
-            const x = Number(v);
-            return Number.isFinite(x) && x > 0 ? x : 0; // número válido y evita negativos/NaN (si no es válido, devuelve 0)
-        };
-        //LocaleString para CLP
-        const clp = (v) => `$${Math.round(v).toLocaleString('es-CL')}`;
-    
-        //Resultados
+    // Garantía
+    const garantiaMonto = !equiposConRecargo || !garantia ? '—' : (equiposConRecargo * GAR);
 
-        const subtotalEquipos = costoPaneles + n(inversorPrecio) + costoBaterias + n(estructurasPrecio);
-    
-    
-        // Recargo por tipo de techo (sobre subtotal de equipos)
-        const recargoTecho = subtotalEquipos * (RECARGO_TECHO[techo] || 0);
-        const equiposConRecargo = subtotalEquipos + recargoTecho;
-    
-    
-        // Subsidio (porcentaje negativo) sobre equipos con recargo
-        const subsidioMonto = equiposConRecargo * (SUB[subsidio] || 0);
-    
-    
-        // Instalación final = base + % por complejidad
-        const instalacionFinal = n(instalacionBase) * (1 + (COMP[complejidad] || 0));
-    
-    
-        // IVA sobre (equipos con recargo - subsidio + instalación)
-        const baseIVA = Math.max(0, equiposConRecargo - subsidioMonto + instalacionFinal);
-        const ivaMonto = baseIVA * IVA;
-    
-    
-        // Envío = base región + peso*700, multiplicado por método
-        const envioMonto = ((ENVIO_BASE[region] || 0) + n(pesoKg) * COSTO_KG) * (ENVIO_MULT[envio] || 1);
-    
-    
-        // Garantía = % sobre equipos con recargo (antes de subsidio)
-        const garantiaMonto = equiposConRecargo * (GAR[garantia] || 0);
-    
-    
-        // Total antes de financiar
-        const totalAntesFinanciar = Math.max(0, equiposConRecargo - subsidioMonto + instalacionFinal + ivaMonto + envioMonto + garantiaMonto);
-    
-    
-        // Financiamiento (interés simple)
-        const plan = PLAN[planPago] || PLAN['contado'];
-        let pie = 0;
-        if (tipoPie === 'porcentaje') pie = totalAntesFinanciar * (n(pieValor) / 100);
-        else pie = n(pieValor);
-        pie = Math.min(Math.max(0, pie), totalAntesFinanciar); // limitar para no exceder
-    
-    
-        const montoFinanciar = totalAntesFinanciar - pie;
-        const interesTotal = montoFinanciar * plan.tasa * plan.cuotas;
-        const cuota = plan.cuotas > 1 ? (montoFinanciar + interesTotal) / plan.cuotas : 0;
-        const totalFinal = pie + montoFinanciar + interesTotal; // = totalAntes + interes
-    
-    
-        // Advertencia simple
-        const advertencia = potenciaKW > 7 && n(batCantidad) === 0 ? 'Recomendado considerar almacenamiento para estabilidad del sistema' : '';
-    
-        // ====== Acciones ======
-        const limpiar = () => {
-            setPotenciaPanel(0); setCantidadPanel(0); setPanelPrecio(0);
-            setInversorPrecio(0); setBateriaPrecio(0); setBatCantidad(0);
-            setEstructurasPrecio(0); setInstalacionBase(0); setPesoKg(0);
-            setTecho(''); setRegion(''); setComplejidad(''); setSubsidio(''); setEnvio(''); setGarantia(''); setPlanPago('');
-            setTipoPie('porcentaje'); setPieValor(0);
-        };
-    
-    */
+    // Total antes de financiar
+    const totalAntesFinanciar = !equiposConRecargo || !instalacionFinal || !ivaMonto || !envioMonto || !garantiaMonto || ivaMonto === '—' || envioMonto === '—' || garantiaMonto === '—' ? '—' : (equiposConRecargo - subsidioMonto + instalacionFinal + ivaMonto + envioMonto + garantiaMonto);
+
+    // Pie
+    const pie = !totalAntesFinanciar || !pieValor || !tipoPie || totalAntesFinanciar === '—' ? '—' : (
+        tipoPie == 1
+            ? (totalAntesFinanciar * (parseInt(pieValor) / 100))
+            : parseInt(pieValor)
+    );
+
+    // Interés total
+    const montoFinanciar = !totalAntesFinanciar || !pie || pie === '—' ? '—' : (totalAntesFinanciar - pie);
+    const interesTotal = !montoFinanciar || montoFinanciar === '—' ? '—' : (montoFinanciar * PLAN * CUOTAS);
+
+    // Cuota
+    const cuota = !montoFinanciar || !interesTotal || montoFinanciar === '—' || interesTotal === '—' ? '—' : CUOTAS > 1 ? (montoFinanciar + interesTotal) / CUOTAS : 0;
+
+    // Total final
+    const totalFinal = !interesTotal || !totalAntesFinanciar || totalAntesFinanciar === '—' || interesTotal === '—' ? '—' : (totalAntesFinanciar + interesTotal);
+
     return (
         <div id='demo-calculadora'>
             <div className='row mt-5'>
@@ -189,7 +146,7 @@ function Calculadora() {
                                     <label className='form-label' htmlFor='estructurasPrecio'>Estruct./cableado</label>
                                     <input id='estructurasPrecio' name='estructurasPrecio' placeholder='180000' type='number' className='form-control' value={estructurasPrecio} onChange={(e) => setEstructurasPrecio(e.target.value)}></input>
                                 </div>
-                                <label className='mt-2' style={{fontSize: '13px', color: 'red'}}>{advertenciaPotencia}</label>
+                                <label className='mt-2' style={{ fontSize: '13px', color: 'red' }}>{advertenciaPotencia}</label>
                             </div>
 
                             {/* Instalación y peso */}
@@ -288,8 +245,8 @@ function Calculadora() {
                             <div className='row mt-4'>
                                 <div className='col-lg-6'>
                                     <label className='form-label' htmlFor='pieValor'>Valor de pie</label>
-                                    <input id='pieValor' name='pieValor' placeholder='10' type='number' className='form-control' value={pieValor} onChange={(e) => setPieValor(e.target.value)}></input>
-                                    <label className='text-muted mt-2' style={{fontSize: '13px'}}>Si es porcentaje, 10 = 10%</label>
+                                    <input id='pieValor' name='pieValor' placeholder='10' type='number' className='form-control' value={pieValor} onChange={(e) => setPieValor(e.target.value)} min={0} max={totalAntesFinanciar}></input>
+                                    <label className='text-muted mt-2' style={{ fontSize: '13px' }}>Si es porcentaje, 10 = 10%</label>
                                 </div>
                             </div>
 
@@ -356,27 +313,27 @@ function Calculadora() {
                                     </tr>
                                     <tr>
                                         <td>Garantía</td>
-                                        <td>${}</td>
+                                        <td>${garantiaMonto.toLocaleString()}</td>
                                     </tr>
                                     <tr>
                                         <td>Total antes de financiar</td>
-                                        <td>${}</td>
+                                        <td>${totalAntesFinanciar.toLocaleString()}</td>
                                     </tr>
                                     <tr>
                                         <td>Pie</td>
-                                        <td>${}</td>
+                                        <td>${pie.toLocaleString()}</td>
                                     </tr>
                                     <tr>
                                         <td>Interés total</td>
-                                        <td>${}</td>
+                                        <td>${interesTotal.toLocaleString()}</td>
                                     </tr>
                                     <tr>
                                         <td>Cuota</td>
-                                        <td>${}</td>
+                                        <td>${cuota.toLocaleString()}</td>
                                     </tr>
-                                    <tr style={{fontWeight: 'bold', fontSize: '18px'}}>
+                                    <tr style={{ fontWeight: 'bold', fontSize: '18px' }}>
                                         <td>Total final</td>
-                                        <td>${}</td>
+                                        <td>${totalFinal.toLocaleString()}</td>
                                     </tr>
                                 </tbody>
                             </Table>
