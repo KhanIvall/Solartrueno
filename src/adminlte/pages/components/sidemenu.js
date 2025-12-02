@@ -68,8 +68,7 @@ function SideMenu() {
                             <a href="pages/widgets.html" className="nav-link">
                                 <i className="nav-icon fas fa-th" />
                                 <p>
-                                    Widgets
-                                    <span className="right badge badge-danger">New</span>
+                                    Usuarios
                                 </p>
                             </a>
                         </li>
