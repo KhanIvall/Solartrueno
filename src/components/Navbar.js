@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -29,7 +30,7 @@ function NavbarPrincipal() {
                         <Nav.Link href="#testimonios" className="text-warning">Testimonios</Nav.Link>
                         <Nav.Link href="#faq" className="text-warning">FAQ</Nav.Link>
                         <Nav.Link href="#contacto" className="text-warning">Contacto</Nav.Link>
-                        <Nav.Link href="adminlte/pages/dashboard.js" className="text-warning">AdminLte</Nav.Link>
+                        <Nav.Link as={Link} to="/dashboard" className="text-warning">AdminLte</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
