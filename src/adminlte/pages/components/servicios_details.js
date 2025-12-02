@@ -12,19 +12,18 @@ function DetalleServicio() {
     const [certificacion, setCertificacion] = useState('');
     const [disponibilidad, setDisponibilidad] = useState('');
 
+    console.log('valor id: ' + id);
+
     useEffect(() => {
         Axios.get('http://localhost:3001/api/service/' + id)
             .then((response) => {
-                const servicios = response.data;
-                const servicioEncontrado = servicios.find(s => s.id == id);
-
-                if (servicioEncontrado) {
-                    setNombreServicio(servicioEncontrado.nombreServicio);
-                    setTipoServicio(servicioEncontrado.tipoServicio);
-                    setDescripcion(servicioEncontrado.descripcion);
-                    setCertificacion(servicioEncontrado.certificacion);
-                    setDisponibilidad(servicioEncontrado.disponibilidad);
-                }
+                const servicio = Array.isArray(response.data) ? response.data[0] : response.data;
+                
+                setNombreServicio(servicio.nombreServicio);
+                setTipoServicio(servicio.tipoServicio);
+                setDescripcion(servicio.descripcion);
+                setCertificacion(servicio.certificacion);
+                setDisponibilidad(servicio.disponibilidad);
             })
             .catch((error) => console.log(error));
     }, [id]);
@@ -64,19 +63,19 @@ function DetalleServicio() {
                                 <div className="card-body">
                                     <strong><i className="fas fa-briefcase mr-1"></i> Nombre del Servicio</strong>
                                     <p className="text-muted">
-                                        {nombreServicio || 'Cargando datos...'}
+                                        {nombreServicio || ''}
                                     </p>
                                     <hr />
 
                                     <strong><i className="fas fa-tag mr-1"></i> Tipo / Categoría</strong>
                                     <p className="text-muted">
-                                        {tipoServicio}
+                                        {tipoServicio || ''}
                                     </p>
                                     <hr />
 
                                     <strong><i className="fas fa-align-left mr-1"></i> Descripción Técnica</strong>
                                     <p className="text-muted">
-                                        {descripcion}
+                                        {descripcion || ''}
                                     </p>
                                     <hr />
 
@@ -105,7 +104,7 @@ function DetalleServicio() {
                                 </div>
 
                                 <div className="card-footer text-center">
-                                    <Link to="/servicios" className="btn btn-secondary mr-2">
+                                    <Link to="/services" className="btn btn-secondary mr-2">
                                         <i className="fas fa-arrow-left mr-1"></i> Volver
                                     </Link>
                                     <button className="btn btn-teal">

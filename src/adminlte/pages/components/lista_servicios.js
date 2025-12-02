@@ -17,6 +17,8 @@ function ListaServicios() {
             })
             .catch((error) => console.log(error));
     }, []);
+    
+    console.log(servicios);
 
     return (
         <div className="content-wrapper">
