@@ -13,7 +13,7 @@ function DetalleServicio() {
     const [disponibilidad, setDisponibilidad] = useState('');
 
     useEffect(() => {
-        Axios.get('http://localhost:3001/api/servicios')
+        Axios.get('http://localhost:3001/api/service/' + id)
             .then((response) => {
                 const servicios = response.data;
                 const servicioEncontrado = servicios.find(s => s.id == id);
@@ -64,7 +64,7 @@ function DetalleServicio() {
                                 <div className="card-body">
                                     <strong><i className="fas fa-briefcase mr-1"></i> Nombre del Servicio</strong>
                                     <p className="text-muted">
-                                        {nombreServicio || 'Cargando...'}
+                                        {nombreServicio || 'Cargando datos...'}
                                     </p>
                                     <hr />
 

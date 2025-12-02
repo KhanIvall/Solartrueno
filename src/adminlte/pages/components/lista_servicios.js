@@ -7,7 +7,7 @@ function ListaServicios() {
     const [servicios, setServicios] = useState([]);
 
     useEffect(() => {
-        Axios.get('http://localhost:3001/api/servicios')
+        Axios.get('http://localhost:3001/api/services')
             .then((response) => {
                 if (Array.isArray(response.data)) {
                     setServicios(response.data);
@@ -29,7 +29,7 @@ function ListaServicios() {
                         </div>
                         <div className="col-sm-6">
                             <ol className="breadcrumb float-sm-right">
-                                <li className="breadcrumb-item"><a href="#">Dashboard</a></li>
+                                <li className="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
                                 <li className="breadcrumb-item active">Servicios</li>
                             </ol>
                         </div>
@@ -90,7 +90,7 @@ function ListaServicios() {
                                                         <a href="#" className="btn btn-sm bg-teal">
                                                             <i className="fas fa-comments" />
                                                         </a>
-                                                        <a href="#" className="btn btn-sm btn-primary ml-1">
+                                                        <a href={"/service/" + servicio.id} className="btn btn-sm btn-primary ml-1">
                                                             <i className="fas fa-eye mr-1" /> Ver Ficha
                                                         </a>
                                                     </div>
