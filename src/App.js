@@ -12,6 +12,8 @@ import Contact from './components/Contacto';
 import Foot from './components/Footer';
 import CarruselPrincipal from './components/Carrusel';
 import DashboardHome from './adminlte/pages/dashboard';
+import ListadoPlanes from './adminlte/pages/planes';
+import DetallePlan from './adminlte/pages/plan';
 
 function App() {
   return (
@@ -38,6 +40,10 @@ function App() {
         
         {/* Ruta del dashboard */}
         <Route path="/dashboard" element={<DashboardHome />} />
+        {/* Ruta de los planes */}
+        <Route path="/plans" element={<ListadoPlanes />} />
+        {/* Ruta de un plan */}
+        <Route path="/plan/:id" element={<DetallePlan />} />
       </Routes>
     </Router>
   );

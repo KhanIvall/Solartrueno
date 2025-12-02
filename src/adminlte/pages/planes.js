@@ -1,17 +1,18 @@
-import React from "react";
+import React from 'react';
 import NavBarPrincipal from "./components/navbar";
 import SideMenu from "./components/sidemenu";
 import Footer from "./components/footer";
+import ListaPlanes from "./components/lista_planes";
 
-function DashboardHome(){
+function Planes(){
     return(
         <div>
             <NavBarPrincipal />
             <SideMenu/>
-
+            <ListaPlanes/>
             <Footer/>
         </div>
     );
 }
 
-export default DashboardHome;
+export default Planes;

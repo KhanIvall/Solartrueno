@@ -40,7 +40,7 @@ function SideMenu() {
                                     </a>
                                 </li>
                                 <li className="nav-item">
-                                    <a href="pages/examples/profile.html" className="nav-link">
+                                    <a href="/plans" className="nav-link">
                                         <i className="far fa-circle nav-icon" />
                                         <p>Planes</p>
                                     </a>
