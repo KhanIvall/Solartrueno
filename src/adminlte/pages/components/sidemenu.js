@@ -4,7 +4,7 @@ function SideMenu() {
     return (
         <aside className="main-sidebar sidebar-dark-primary elevation-4">
 
-            <a href="index3.html" className="brand-link">
+            <a href="/dashboard" className="brand-link">
                 <img src='assets/images/imagotipo.png' alt='logo' style={{ width: '60px', margin: '3px' }} />
                 <span className="brand-text font-weight-light">SolarTrueno</span>
             </a>
@@ -12,10 +12,10 @@ function SideMenu() {
             <div className="sidebar">
                 <div className="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div className="image">
-                        <img src="dist/img/user2-160x160.jpg" className="img-circle elevation-2" alt="User Image" />
+                        <img src="assets\images\fotos\ash_ketchum.jpg" className="img-circle elevation-2" alt="User Image" />
                     </div>
                     <div className="info">
-                        <a href="#" className="d-block">Alexander Pierce</a>
+                        <a href="#" className="d-block">Ash Ketchum</a>
                     </div>
                 </div>
                 
@@ -25,7 +25,7 @@ function SideMenu() {
                         <li className="nav-header">MENÚ PRINCIPAL</li>
                         
                         <li className="nav-item">
-                            <a href="pages/examples/invoice.html" className="nav-link">
+                            <a href="/services" className="nav-link">
                                 <i className="nav-icon fas fa-file-invoice" />
                                 <p>Servicios</p>
                             </a>
